@@ -1,7 +1,22 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 const app = express();
 
 //Middleware
+dotenv.config({path:'./config.env'})
+const DB = process.env.DB;
+
+mongoose.connect(DB, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false
+}).then(()=>{
+    console.log(`connection successfull`);
+}).catch((err) => console.log(`no connection`));
+
+mongoose.Promise = global.Promise
 
 const middleware = (req, res,next) =>{
     console.log(`Hello My middleware`);
