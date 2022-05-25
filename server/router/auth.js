@@ -46,12 +46,24 @@ router.post('/register',async (req,res) => {
         if (userExist) {
             return res.status(422).json({error: "Email Already registered"});
         }
+        else if (password != cpassword){
+            return res.status(422).json({error:"Password is not matching"});
+        }
+        else {
+            const user = new User({name , email, device, password, cpassword});
+            await user.save();
+            res.status(201).json({message:"User successfully registered"});
 
-        const user = new User({name , email, device, password, cpassword});
+        }
 
-        await user.save();
 
-        res.status(201).json({message:"User successfully registered"});
+
+        //yaha hash karna hai 
+
+
+
+
+
 
     }
 
