@@ -2,21 +2,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = express();
+require('./db/conn');
+app.use(express.json());
 
+// const User = require('./models/userSchema');
+
+app.use(require('./router/auth'));
 //Middleware
 dotenv.config({path:'./config.env'})
 const DB = process.env.DB;
+const PORT = process.env.PORT;
 
-mongoose.connect(DB, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-}).then(()=>{
-    console.log(`connection successfull`);
-}).catch((err) => console.log(`no connection`));
 
-mongoose.Promise = global.Promise
 
 const middleware = (req, res,next) =>{
     console.log(`Hello My middleware`);
@@ -52,6 +49,6 @@ app.get('/contact', (req,res) =>{
 });
 
 
-app.listen(3000, () => {
-    console.log(`Server is running on port 3000`);
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 })
