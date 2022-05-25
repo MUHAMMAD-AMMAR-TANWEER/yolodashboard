@@ -12,7 +12,7 @@ app.use(require('./router/auth'));
 dotenv.config({path:'./config.env'})
 const DB = process.env.DB;
 const PORT = process.env.PORT;
-
+console.log(DB);
 
 
 const middleware = (req, res,next) =>{
