@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
         type:String,
         require:true
     },
+    
     tokens: [
         {
             token:{
@@ -31,11 +32,13 @@ const userSchema = new mongoose.Schema({
                 require:true
             }
         }
-    ]
+    ],
 
 
 
-});
+},  {
+    timestamps: true
+  });
 
 userSchema.pre('save',async function(next) {
     // console.log('Hi from inside');
