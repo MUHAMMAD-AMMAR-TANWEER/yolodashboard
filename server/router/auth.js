@@ -7,47 +7,17 @@ const jwt = require('jsonwebtoken');
 const Post = require("../models/Feed"); 
 const TimPost = require("../models/TimFeed");
 
-
 router.get('/', (req,res) =>{
     res.send('Hello from the server routers');
-
 });
-
-//Done with promises
-// router.post('/register', (req,res) => {
-
-//     const {name , email, device, password, cpassword} = req.body;
-//     if (!name  || !email || !device || !password || !cpassword) {
-//         return res.status(422).json({message: "Please fill the form properly"});
-//     }
-
-//     User.findOne({email:email})
-//     .then((userExist) => {
-//         if (userExist){
-//             return res.status(422).json({error:"User email already registered"});
-//         }
-
-//         const user = new User({name , email, device, password, cpassword});
-
-//         user.save().then(() => {
-//             res.status(201).json({message : "user has been registered successfully"});
-//         }).catch((err) => res.status(500).json({error:"Failed to registerd"}));
-//     }).catch(err => {console.log(err);});
-
-//     // res.json({message:req.body});
-// });
 
 router.post('/register',async (req,res) => {
     const {name , email, device, password, cpassword} = req.body;
-
     if (!name  || !email || !device || !password || !cpassword) {
         return res.status(422).json({message: "Please fill the form properly"});
     }
-
     try{
-
         const userExist = await User.findOne({email:email});
-
         if (userExist) {
             return res.status(422).json({error: "Email Already registered"});
         }
@@ -58,26 +28,13 @@ router.post('/register',async (req,res) => {
             const user = new User({name , email, device, password, cpassword});
             await user.save();
             res.status(201).json({message:"User successfully registered"});
-
         }
-
-
-
         //yaha hash karna hai 
-
-
-
-
-
-
     }
 
     catch (err) {
-
         console.log(err);
-
     }
-
 });
 
 router.post('/login', async (req,res) =>{
@@ -100,7 +57,7 @@ router.post('/login', async (req,res) =>{
                 httpOnly:true
 
             });
-            // console.log(token);
+
             if (!isMatch){
                 res.status(400).json({error:"Invalid credinatials  "});
             }
@@ -111,8 +68,6 @@ router.post('/login', async (req,res) =>{
         else {
             res.status(400).json({error:"Invalid credinatials"});       
         }
-
-
 
     }
     catch(err){
@@ -151,17 +106,12 @@ router.post("/feed" , async (req,res)=>{
       res.status(400).send({ message: err })
       
     );
-    
-
-
 
 
 });
 
 router.get("/gfeed", async (req,res) => {
     
-
-    // var lst = [];
     var sendat = [];
     var carlst = []; var motolst = []; var trucklist = [] ; var buslist = []; var perlst = []; var cyclst = [];
     for (let i =0 ;i<31;i++){
@@ -180,28 +130,11 @@ router.get("/gfeed", async (req,res) => {
 
         }
         else {
-            // console.log(tod);
             continue
         }
 
-
-        // lst.push(new Date(now.setDate(now.getDate() - i)));//.toISOString().slice(0, 10)
-        // sendat.push(new Date(now.setDate(now.getDate() - i)).toLocaleDateString('pt-PT'));
     }
-    // console.log(sendat);
-    // console.log(carlst);
-
     var finalData = {"Cars":carlst,"Bicycles":cyclst,"Buses":buslist,"Trucks":trucklist,"Person":perlst,"Motorcycles":motolst,"Labels":sendat};
-
-    // const data = await Post.find({createdAt:{$gt:lst[3],$lt:lst[2]}});
-    // console.log(data);
-    // let event_query = {"$gte":lst[1],"$lte":lst[0]};
-    //const data = await Post.aggregate([{ $match: {createdAt:{$gt:lst[3],$lt:lst[0]}} },{ $group: { _id: '$Device', car: { $sum: "$Car" }, Bicycle: { $sum: "$Bicycle" },Person: { $sum: "$Person" },Bus: { $sum: "$Bus" },Motorcycle: { $sum: "$Motorcycle" },Truck: { $sum: "$Truck" }} }]);
-    // const data  = await Post.aggregate([{$match : {"createdAt":event_query}}]);
-    // console.log(data);
-
-    // const sum = await Post.aggregate([{$match : {"createdAt":event_query}},{$group:{_id:{Device:"TeslaX"},"Car":{$sum:"$Car"}, "Person":{$sum:"$Person"},"Bicycle":{$sum:"$Bicycle"},"Bus":{$sum:"$Bus"},"Motorcycle":{$sum:"$Motorcycle"},"Truck":{$sum:"$Truck"}}},{$project:{_id:0,"Cars":"$Car","Person":"$Person","Bicycles":"$Bicycle","Buses":"$Bus","Motorcycles":"$Motorcycle","Trucks":"$Truck"}}]) //suming whole
-    // console.log(sum);
     console.log("###############");
     res.status(200).send(finalData);
 });
@@ -210,20 +143,16 @@ router.get("/gfeed", async (req,res) => {
 router.post('/timfeed' , async (req,res) => {
     console.log(req.body.Device);
     console.log(req.body.DatTim);
-
     if (!req.body.Device)   {
         res.status(400).send({ message: "Please enter Device UID" });
         return;
       }
       
-
     const timpost = new TimPost({
         Device:req.body.Device,
         DetectionID:req.body.DetectionID,
         DatTim:req.body.DatTim,
         Detection:req.body.Detection,
-
-
     
     })
     console.log(timpost);
@@ -252,11 +181,9 @@ router.get('/gtimfeed' , async (req, res) => {
         res.status(400).send({message:"Please Enter both Dates"});
         return;
     }
-
     var prvDat = new Date(req.body.StartDat);
     var NxtDat = new Date(req.body.EndDat);
     const event_query = {"$gte": prvDat, "$lte":NxtDat};
-
     const docs = await TimPost.aggregate([{"$match":{"createdAt":event_query}}, {"$group" :{_id:{Device:req.body.Device}, "DetectionID":{"$push": "$DetectionID"},"DatTim":{"$push": "$DatTim"},"Detection":{"$push": "$Detection"}}},
 
 ])
@@ -266,37 +193,7 @@ for (let i = 0 ; i<docs[0].DetectionID.length; i++){
     }
 }
 console.log(Data);
-
 res.status(200).send({message:"done"});
-
 })
-
 module.exports = router;
 
-
-    // {"$project":{
-    //     "DetectionID":{
-    //         "$reduce":{
-    //             "input":"$DetectionID",
-    //             "initialValue":[],
-    //             "in":{"$setUnion":["$$value","$$this"]}
-
-    //         }
-    //     },
-    //     "DatTim":{
-    //         "$reduce":{
-    //             "input":"$DatTim",
-    //             "initialValue":[],
-    //             "in":{"$setUnion":["$$value","$$this"]}
-
-    //         }
-    //     },
-    //     "Detection":{
-    //         "$reduce":{
-    //             "input":"$Detection",
-    //             "initialValue":[],
-    //             "in":["$$value","$$this"]
-
-    //         }
-    //     }
-    // }}
