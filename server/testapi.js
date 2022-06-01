@@ -19,3 +19,22 @@ console.log(mydate);
 // const ace = Post.findOne({createdAt:{$gt:lst[1],$lt:lst[0]}});
 // console.log(ace);
 
+[
+    [
+      [ [Array], [Array] ],
+      [
+        'bicycle', 'truck',
+        'bus',     'truck',
+        'bus',     'bicycle',
+        'person',  'bicycle',
+        'person',  'truck'
+      ]
+    ],
+    [
+      'car',       'bus',
+      'person',    'motorbike',
+      'motorbike', 'car',
+      'motorbike', 'bicycle',
+      'motorbike', 'bicycle'
+    ]
+  ]

@@ -11,15 +11,20 @@ router.get('/', (req,res) =>{
     res.send('Hello from the server routers');
 });
 
-router.post('/register',async (req,res) => {
+router.post('/registers',async (req,res) => {
     const {name , email, device, password, cpassword} = req.body;
     if (!name  || !email || !device || !password || !cpassword) {
         return res.status(422).json({message: "Please fill the form properly"});
     }
     try{
         const userExist = await User.findOne({email:email});
+        const deviceExist = await User.findOne({device:device});
         if (userExist) {
             return res.status(422).json({error: "Email Already registered"});
+        }
+        else if (deviceExist){
+            return res.status(422).json({error: "Device is Already registered"});
+
         }
         else if (password != cpassword){
             return res.status(422).json({error:"Password is not matching"});
@@ -39,7 +44,7 @@ router.post('/register',async (req,res) => {
 
 router.post('/login', async (req,res) =>{
     try{
-        let token;
+        
         const {email, password} = req.body;
 
         if (!email || !password) {
@@ -48,21 +53,27 @@ router.post('/login', async (req,res) =>{
 
         const userLogin = await User.findOne({email:email});
 
+
         if (userLogin){
             const isMatch = await bcrypt.compare(password, userLogin.password);
 
-            token = await userLogin.generateAuthToken();
-            res.cookie("jwttoken",token,{
+            const token = await userLogin.generateAuthToken();
+            res.cookie("jwtoken",token,{
                 expires: new Date(Date.now() +25892000000),
-                httpOnly:true
+                httpOnly:false,
+                secure:true
 
             });
+            console.log(token);
+
+
 
             if (!isMatch){
                 res.status(400).json({error:"Invalid credinatials  "});
             }
             else {
-                res.json({message: "User Login Successfully"});
+                res.status(200).json({message: "User Login Successfully","Device":userLogin.device});
+                
             }
         }
         else {
@@ -112,6 +123,7 @@ router.post("/feed" , async (req,res)=>{
 
 router.get("/gfeed", async (req,res) => {
     
+    
     var sendat = [];
     var carlst = []; var motolst = []; var trucklist = [] ; var buslist = []; var perlst = []; var cyclst = [];
     for (let i =0 ;i<31;i++){
@@ -120,13 +132,13 @@ router.get("/gfeed", async (req,res) => {
         var prv = new Date(now.setDate(now.getDate() - i-1));
 
         let event_query = {"$gte":prv,"$lte":tod};
-        const sum = await Post.aggregate([{$match : {"createdAt":event_query}},{$group:{_id:{Device:req.body.Device},
+        const sum = await Post.aggregate([{$match : {"createdAt":event_query}},{$group:{_id:{Device:req.params.Device},
         "Car":{$sum:"$Car"}, "Person":{$sum:"$Person"},"Bicycle":{$sum:"$Bicycle"},"Bus":{$sum:"$Bus"},
         "Motorcycle":{$sum:"$Motorcycle"},"Truck":{$sum:"$Truck"}}}
         ,{$project:{_id:0,"Cars":"$Car","Person":"$Person","Bicycles":"$Bicycle","Buses":"$Bus","Motorcycles":"$Motorcycle","Trucks":"$Truck"}}]) //suming whole
         if (sum.length>0) {
             carlst.push(sum[0]["Cars"]); buslist.push(sum[0]["Buses"]); perlst.push(sum[0]["Person"]);cyclst.push(sum[0]["Bicycles"]);motolst.push(sum[0]["Motorcycles"]);trucklist.push(sum[0]["Trucks"]);
-            sendat.push(new Date(now.setDate(now.getDate() - i)).toLocaleDateString('pt-PT'));
+            sendat.push(new Date(now.setDate(now.getDate() - i)).toLocaleDateString('en-US'));
 
         }
         else {
@@ -135,7 +147,7 @@ router.get("/gfeed", async (req,res) => {
 
     }
     var finalData = {"Cars":carlst,"Bicycles":cyclst,"Buses":buslist,"Trucks":trucklist,"Person":perlst,"Motorcycles":motolst,"Labels":sendat};
-    console.log("###############");
+
     res.status(200).send(finalData);
 });
 
@@ -170,21 +182,21 @@ router.post('/timfeed' , async (req,res) => {
 
 });
 
-router.get('/gtimfeed' , async (req, res) => {
-
+router.get('/gtimfeed/:Device/:StartDat/:EndDat' , async (req, res) => {
+    console.log(req.params);
     var Data =[];
-    if (!req.body.Device)   {
+    if (!req.params.Device)   {
         res.status(400).send({ message: "Please enter Device UID" });
         return;
       }
-    if (!req.body.StartDat && !req.body.EndDat){
+    if (!req.params.StartDat && !req.params.EndDat){
         res.status(400).send({message:"Please Enter both Dates"});
         return;
     }
-    var prvDat = new Date(req.body.StartDat);
-    var NxtDat = new Date(req.body.EndDat);
+    var prvDat = new Date(req.params.StartDat);
+    var NxtDat = new Date(req.params.EndDat);
     const event_query = {"$gte": prvDat, "$lte":NxtDat};
-    const docs = await TimPost.aggregate([{"$match":{"createdAt":event_query}}, {"$group" :{_id:{Device:req.body.Device}, "DetectionID":{"$push": "$DetectionID"},"DatTim":{"$push": "$DatTim"},"Detection":{"$push": "$Detection"}}},
+    const docs = await TimPost.aggregate([{"$match":{"createdAt":event_query}}, {"$group" :{_id:{Device:req.params.Device}, "DetectionID":{"$push": "$DetectionID"},"DatTim":{"$push": "$DatTim"},"Detection":{"$push": "$Detection"}}},
 
 ])
 for (let i = 0 ; i<docs[0].DetectionID.length; i++){
@@ -192,8 +204,8 @@ for (let i = 0 ; i<docs[0].DetectionID.length; i++){
         Data.push({"DateTime":docs[0].DatTim[i][j],"Detection":docs[0].Detection[i][j],"DetectionID":docs[0].DetectionID[i][j]})
     }
 }
-console.log(Data);
-res.status(200).send({message:"done"});
+
+res.status(200).send({message:Data});
 })
 module.exports = router;
 

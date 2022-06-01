@@ -2,7 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = express();
+const cors = require("cors");
 require('./db/conn');
+app.use(cors()); 
+app.use(cors({ origin: true, credentials: true }))
+app.options("*", cors({ origin: 'http://localhost:3000', optionsSuccessStatus: 200 }));
 app.use(express.json());
 
 // const User = require('./models/userSchema');
