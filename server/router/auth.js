@@ -215,17 +215,26 @@ router.get("/gtimfeed/:Device/:StartDat/:EndDat", async (req, res) => {
     },
   ]);
   console.log(docs);
-
-  for (let i = 0; i < docs[0].DetectionID.length; i++) {
-    for (let j = 0; j < docs[0].Detection[i].length; j++) {
-      Data.push({
-        DateTime: docs[0].DatTim[i][j],
-        Detection: docs[0].Detection[i][j],
-        DetectionID: docs[0].DetectionID[i][j],
-      });
+  if (docs.length > 0) {
+    for (let i = 0; i < docs[0].DetectionID.length; i++) {
+      for (let j = 0; j < docs[0].Detection[i].length; j++) {
+        Data.push({
+          DateTime: docs[0].DatTim[i][j],
+          Detection: docs[0].Detection[i][j],
+          DetectionID: docs[0].DetectionID[i][j],
+        });
+      }
     }
-  }
 
-  res.status(200).send({ message: Data });
+    res.status(200).send({ message: Data });
+  } else {
+    res.status(200).send({
+      message: [
+        {
+          LOG: `Your data at  interval from ${req.params.StartDat} to ${req.params.EndDat} is not present`,
+        },
+      ],
+    });
+  }
 });
 module.exports = router;
