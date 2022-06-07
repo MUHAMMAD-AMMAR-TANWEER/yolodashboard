@@ -6,9 +6,57 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Post = require("../models/Feed");
 const TimPost = require("../models/TimFeed");
+const imgPost = require("../models/imgFeed");
+const imgFeed = require("../models/imgFeed");
 
-router.get("/", (req, res) => {
-  res.send("Hello from the server routers");
+//posting the image upload time
+router.post("/imgupload", async (req, res) => {
+  const { Device, Tim } = req.body;
+  if (!Device && !Tim) {
+    return res.status(422).json({ message: "Please send data Properly" });
+  }
+  try {
+    const imgfeed = await imgFeed.findOne({ Device: Device });
+    if (!imgfeed) {
+      const imfeed = new imgPost({ Device, Tim });
+      await imfeed.save();
+      res
+        .status(200)
+        .send({ message: " The image has been uploaded on server" });
+    } else {
+      imgFeed
+        .findOneAndUpdate({ Device: Device }, { Tim: Tim }, { new: true })
+        .then((updateduser) => {
+          res
+            .status(200)
+            .send({ message: " Image Device data has been Updated" });
+        })
+        .catch((err) => {
+          console.log("Error in else");
+        });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.get("/imgfeed/:Device", async (req, res) => {
+  const { Device } = req.params;
+  try {
+    const imgTim = await imgFeed.findOne(
+      { Device: Device },
+      { _id: 0, __v: 0, createdAt: 0 }
+    );
+    if (!imgTim) {
+      res
+        .status(200)
+        .send({ message: "Device is not available please first register" });
+    } else {
+      res.status(200).send({ message: imgTim });
+    }
+  } catch (err) {
+    res.send({ message: "Device is not available please first register" });
+  }
 });
 
 router.post("/registers", async (req, res) => {
