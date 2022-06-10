@@ -37,7 +37,7 @@ export default function LoginForm() {
     onSubmit: () => {
       axios
         .post(
-          'http://localhost:5000/login',
+          'http://67.205.174.44:5000/login',
           {
             email: values.email,
             password: values.password,

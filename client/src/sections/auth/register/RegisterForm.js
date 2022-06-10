@@ -28,49 +28,44 @@ export default function RegisterForm() {
       firstName: '',
       lastName: '',
       email: '',
-      deviceID:'',
+      deviceID: '',
       password: '',
-      cpassword:'',
+      cpassword: '',
     },
     validationSchema: RegisterSchema,
     onSubmit: () => {
       console.log(values);
 
-      axios.post('http://localhost:5000/registers', {
-        name: values.firstName,
-        email: values.email,
-        device: values.deviceID,
-        password: values.password,
-        cpassword: values.cpassword
-      })   .then( (response) => {
-        
-        if (response.status === 201) {
-          navigate('/login', { replace: true });
-        }
+      axios
+        .post('http://67.205.174.44:5000/registers', {
+          name: values.firstName,
+          email: values.email,
+          device: values.deviceID,
+          password: values.password,
+          cpassword: values.cpassword,
+        })
+        .then((response) => {
+          if (response.status === 201) {
+            navigate('/login', { replace: true });
+          }
 
-
-        // console.log(response.statusText);
-        // console.log(response.headers);
-        // console.log(response.config);
-
-      }).catch(() => {
-        alert("Please provide valid credientials");
-        // navigate('/login', { replace: true });
-        
-      })
-      
-
+          // console.log(response.statusText);
+          // console.log(response.headers);
+          // console.log(response.config);
+        })
+        .catch(() => {
+          alert('Please provide valid credientials');
+          // navigate('/login', { replace: true });
+        });
 
       // navigate('/login', { replace: true });
     },
   });
 
-    // const [Formik,setFormik] = useState(null)
-//  all changes has been done here 
-    // console.log(formik);
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps , values} = formik;
-  
-
+  // const [Formik,setFormik] = useState(null)
+  //  all changes has been done here
+  // console.log(formik);
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps, values } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -104,8 +99,7 @@ export default function RegisterForm() {
             helperText={touched.email && errors.email}
           />
 
-
-            <TextField
+          <TextField
             fullWidth
             autoComplete="username"
             type="deviceID"
@@ -134,7 +128,7 @@ export default function RegisterForm() {
             helperText={touched.password && errors.password}
           />
 
-            <TextField
+          <TextField
             fullWidth
             autoComplete="current-cpassword"
             type={showPassword ? 'text' : 'cpassword'}
