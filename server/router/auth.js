@@ -252,7 +252,7 @@ router.get("/gtimfeed/:Device/:StartDat/:EndDat", async (req, res) => {
   var NxtDat = new Date(req.params.EndDat);
   const event_query = { $gte: prvDat, $lte: NxtDat };
   const docs = await TimPost.aggregate([
-    { $match: { createdAt: event_query } },
+    { $match: { createdAt: event_query, Device: req.params.Device } },
     {
       $group: {
         _id: { Device: req.params.Device },

@@ -34,8 +34,8 @@ import {
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
-  const [startDate, setStartDate] = useState('05/25/2022');
-  const [endDate, setEndDate] = useState('05/28/2022');
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   const [csv, setcsvData] = useState([false, []]);
   const [Data, setData] = useState([]);
   const [add, setAdd] = useState('');
@@ -51,10 +51,10 @@ export default function DashboardApp() {
 
   const csvdataHandler = async () => {
     let settingStartDate = startDate.split('/');
-    settingStartDate = `${settingStartDate[0]}-${settingStartDate[1]}-${settingStartDate[2]}`;
+    settingStartDate = `${settingStartDate[2]}-${settingStartDate[0]}-${settingStartDate[1]}`;
     let settingEndDate = endDate.split('/');
     console.log(settingEndDate);
-    settingEndDate = `${settingEndDate[0]}-${settingEndDate[1]}-${settingEndDate[2]}`;
+    settingEndDate = `${settingEndDate[0]}`;
 
     const { data } = await axios.get(
       `http://67.205.174.44:5000/gtimfeed/${userDevice}/${settingStartDate}/${settingEndDate}`
@@ -62,7 +62,7 @@ export default function DashboardApp() {
     console.log(data, 'faizannnnnnnnnnnnn');
     return data.message;
   };
-
+  const imgurl = `https://adverge.nyc3.digitaloceanspaces.com/adverge/${userDevice}.jpg`;
   const urlimgfeed = `http://67.205.174.44:5000/imgfeed/${userDevice}`;
   // useEffect(() => {
   //   const axiosPostt = async () => {
@@ -92,7 +92,7 @@ export default function DashboardApp() {
     <Page title="Dashboard">
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back {userDevice}
+          Device ID: {userDevice}
         </Typography>
 
         <Grid container spacing={3}>
@@ -201,9 +201,9 @@ export default function DashboardApp() {
           </Grid>
           <Grid item xs={12} md={6} lg={4}>
             <Typography variant="h6" sx={{ mb: 5 }}>
-              Uploaded at {add}
+              Uploaded Date: {add}
             </Typography>
-            <img src="https://adverge.nyc3.digitaloceanspaces.com/adverge/index22.jpg" alt="new" />
+            <img src={imgurl} alt="new" />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
