@@ -53,8 +53,9 @@ export default function DashboardApp() {
     let settingStartDate = startDate.split('/');
     settingStartDate = `${settingStartDate[2]}-${settingStartDate[0]}-${settingStartDate[1]}`;
     let settingEndDate = endDate.split('/');
-    console.log(settingEndDate);
-    settingEndDate = `${settingEndDate[0]}`;
+    console.log(settingStartDate, 'adbiuahciuaghiuc ');
+    settingEndDate = `${settingEndDate[2]}-${settingEndDate[0]}-${settingEndDate[1]}`;
+    console.log(settingEndDate, '&&&&&&&');
 
     const { data } = await axios.get(
       `http://67.205.174.44:5000/gtimfeed/${userDevice}/${settingStartDate}/${settingEndDate}`
@@ -110,7 +111,7 @@ export default function DashboardApp() {
               label="End Date"
               value={endDate}
               onChange={(newValue) => {
-                setEndDate(newValue.toLocaleDateString('se-SE'));
+                setEndDate(newValue.toLocaleDateString('en', { year: 'numeric', month: '2-digit', day: 'numeric' }));
               }}
               renderInput={(params) => <TextField style={{ margin: '1rem' }} {...params} />}
             />
@@ -156,7 +157,7 @@ export default function DashboardApp() {
           </Grid>
           <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
-              title="Impressions"
+              title="Daily Impressions"
               // subheader="(+43%) than last year"
               chartLabels={Data.Labels ? Data.Labels : null} // {Data.Labels?Data.Labels:null}
               chartData={[
@@ -208,7 +209,7 @@ export default function DashboardApp() {
 
           <Grid item xs={12} md={6} lg={8}>
             <AppConversionRates
-              title="Impressions"
+              title="Total Impressions"
               // subheader="(+43%) than last year"
               chartData={[
                 { label: 'Cars', value: Data?.Cars?.reduce((a, b) => a + b, 0) },

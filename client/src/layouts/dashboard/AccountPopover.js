@@ -101,9 +101,9 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} /> */}
 
-        <MenuItem onClick={handleClose} sx={{ m: 1 }}>
+        {/* <MenuItem onClick={handleClose} sx={{ m: 1 }}>
           Logout
-        </MenuItem>
+        </MenuItem> */}
       </MenuPopover>
     </>
   );
