@@ -35,7 +35,9 @@ https
       key: fs.readFileSync(
         "/etc/letsencrypt/live/dashboard.advergeanalytics.com/fullchain.pem"
       ),
-      cert: fs.readFileSync("/etc/letsencrypt/live/tradeape.co/fullchain.pem"),
+      cert: fs.readFileSync(
+        "/etc/letsencrypt/live/dashboard.advergeanalytics.com/fullchain.pem"
+      ),
     },
     app
   )
