@@ -37,7 +37,7 @@ export default function LoginForm() {
     onSubmit: () => {
       axios
         .post(
-          'http://dashboard.advergeanalytics.com:5000/login',
+          'https://dashboard.advergeanalytics.com:5000/login',
           {
             email: values.email,
             password: values.password,

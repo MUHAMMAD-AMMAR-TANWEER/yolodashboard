@@ -33,7 +33,7 @@ https
   .createServer(
     {
       key: fs.readFileSync(
-        "/etc/letsencrypt/live/dashboard.advergeanalytics.com/fullchain.pem"
+        "/etc/letsencrypt/live/dashboard.advergeanalytics.com/privkey.pem"
       ),
       cert: fs.readFileSync(
         "/etc/letsencrypt/live/dashboard.advergeanalytics.com/fullchain.pem"

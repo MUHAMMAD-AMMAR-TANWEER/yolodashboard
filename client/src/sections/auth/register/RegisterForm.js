@@ -40,7 +40,7 @@ export default function RegisterForm() {
       console.log(values);
 
       axios
-        .post('http://dashboard.advergeanalytics.com:5000/registers', {
+        .post('https://dashboard.advergeanalytics.com:5000/registers', {
           name: values.firstName,
           email: values.email,
           device: values.deviceID,
