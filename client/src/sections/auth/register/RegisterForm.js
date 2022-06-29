@@ -15,12 +15,15 @@ export default function RegisterForm() {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('First name required'),
     lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    deviceID: Yup.string().required('Password is required'),
     password: Yup.string().required('Password is required'),
+    cpassword: Yup.string().required('Password is required'),
   });
 
   const formik = useFormik({
@@ -37,7 +40,7 @@ export default function RegisterForm() {
       console.log(values);
 
       axios
-        .post('http://67.205.174.44:5000/registers', {
+        .post('http://dashboard.advergeanalytics.com:5000/registers', {
           name: values.firstName,
           email: values.email,
           device: values.deviceID,
@@ -131,14 +134,14 @@ export default function RegisterForm() {
           <TextField
             fullWidth
             autoComplete="current-cpassword"
-            type={showPassword ? 'text' : 'cpassword'}
+            type={showConfirmPassword ? 'text' : 'cpassword'}
             label="Confirm Password"
             {...getFieldProps('cpassword')}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton edge="end" onClick={() => setShowPassword((prev) => !prev)}>
-                    <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                  <IconButton edge="end" onClick={() => setShowConfirmPassword((prev) => !prev)}>
+                    <Iconify icon={showConfirmPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                   </IconButton>
                 </InputAdornment>
               ),

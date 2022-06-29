@@ -81,7 +81,7 @@ export default function Register() {
             {/* <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               Meaningful Viewership Metrics
             </Typography> */}
-            <img src="/static/illustrations/Adverge_Logo_BlackBG.png" alt="login" />
+            <img src="/static/illustrations/illustration_register.png" alt="login" />
           </SectionStyle>
         )}
 

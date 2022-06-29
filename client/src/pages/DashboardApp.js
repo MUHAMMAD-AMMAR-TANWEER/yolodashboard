@@ -58,13 +58,13 @@ export default function DashboardApp() {
     console.log(settingEndDate, '&&&&&&&');
 
     const { data } = await axios.get(
-      `http://67.205.174.44:5000/gtimfeed/${userDevice}/${settingStartDate}/${settingEndDate}`
+      `http://dashboard.advergeanalytics.com:5000/gtimfeed/${userDevice}/${settingStartDate}/${settingEndDate}`
     );
     console.log(data, 'faizannnnnnnnnnnnn');
     return data.message;
   };
   const imgurl = `https://adverge.nyc3.digitaloceanspaces.com/adverge/${userDevice}.jpg`;
-  const urlimgfeed = `http://67.205.174.44:5000/imgfeed/${userDevice}`;
+  const urlimgfeed = `http://dashboard.advergeanalytics.com:5000/imgfeed/${userDevice}`;
   // useEffect(() => {
   //   const axiosPostt = async () => {
   //     const response = await axios.get(`${urlimgfeed}`);
@@ -76,7 +76,7 @@ export default function DashboardApp() {
   // }, []);
   // console.log(add, 'ada;kdcaiopcjiaohoiu');
 
-  const url = `http://67.205.174.44:5000/gfeed?Device=${userDevice}`;
+  const url = `http://dashboard.advergeanalytics.com:5000/gfeed?Device=${userDevice}`;
   useEffect(() => {
     const axiosPost = async () => {
       const response = await axios.get(`${url}`);
